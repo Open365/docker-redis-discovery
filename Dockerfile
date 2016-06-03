@@ -1,25 +1,18 @@
-FROM redis:3.0
+FROM docker-registry.eyeosbcn.com/alpine6-node-base
 MAINTAINER eyeos
 
 ENV WHATAMI redis
 
 COPY start.sh /tmp/start.sh
 
-RUN \
-	apt-get update && \
-	apt-get install -y curl dnsmasq && \
-	curl -sL https://deb.nodesource.com/setup_0.10 | bash - && \
-	apt-get install -y unzip nodejs build-essential git build-essential && \
+RUN apk update && \
+	/scripts-base/installExtraBuild.sh redis && \
 	chmod +x /tmp/start.sh && \
 	curl -L https://releases.hashicorp.com/serf/0.6.4/serf_0.6.4_linux_amd64.zip -o serf.zip && \
-	unzip serf.zip && \
-	mv serf /usr/bin/serf && \
-	npm install -g npm@2.14.4 && \
+	unzip serf.zip && mv serf /usr/bin/serf && rm serf.zip && \
 	npm install -g eyeos-run-server eyeos-tags-to-dns eyeos-service-ready-notify-cli && \
-	apt-get clean && \
-	apt-get -y remove --purge curl git build-essential && \
-	apt-get -y autoremove && \
-	rm -rf /var/lib/apt/lists/*
+    /scripts-base/deleteExtraBuild.sh && \
+	rm -rf /etc/ssl /var/cache/apk/*
 
 COPY dnsmasq.conf /etc/dnsmasq.d/
 COPY dnsmasq_generic.conf /etc/dnsmasq.conf
