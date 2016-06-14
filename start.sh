@@ -1,3 +1,3 @@
 #!/bin/sh
 eyeos-service-ready-notify-cli &
-eyeos-run-server --serf redis-server
+exec eyeos-run-server --serf redis-server

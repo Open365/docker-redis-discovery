@@ -21,4 +21,4 @@ EXPOSE 6379
 
 COPY start.sh ${InstallationDir}/start.sh
 
-CMD ./start.sh
+CMD ["./start.sh"]
