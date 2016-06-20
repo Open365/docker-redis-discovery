@@ -1,6 +1,9 @@
 FROM redis:3.0-alpine
 MAINTAINER eyeos
 ENV WHATAMI redis
+ENV InstallationDir /var/service
+
+WORKDIR ${InstallationDir}
 
 RUN apk update && \
     apk add curl make gcc g++ git python unzip dnsmasq nodejs && \
@@ -16,6 +19,6 @@ COPY dnsmasq_generic.conf /etc/dnsmasq.conf
 
 EXPOSE 6379
 
-COPY start.sh /tmp/start.sh
+COPY start.sh ${InstallationDir}/start.sh
 
-CMD /tmp/start.sh
+CMD ["./start.sh"]
